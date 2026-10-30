@@ -2,21 +2,27 @@
 #include "vtk_writer.hpp"
 
 #include <algorithm>
+#include <charconv>
 #include <cmath>
 #include <exception>
 #include <iostream>
+#include <stdexcept>
 #include <string>
+#include <string_view>
+#include <system_error>
 
 namespace {
 
 std::size_t parse_size(const char* text, const char* name) {
-    std::size_t consumed = 0;
-    const std::string value(text);
-    const auto parsed = std::stoull(value, &consumed);
-    if (consumed != value.size() || parsed == 0) {
-        throw std::invalid_argument(std::string(name) + " must be a positive integer");
+    const std::string_view value(text);
+    std::size_t parsed = 0;
+    const auto result = std::from_chars(value.data(), value.data() + value.size(), parsed, 10);
+    if (value.empty() || result.ec != std::errc{} ||
+        result.ptr != value.data() + value.size() || parsed == 0) {
+        throw std::invalid_argument(std::string(name) +
+                                    " must be a positive decimal integer that fits in size_t");
     }
-    return static_cast<std::size_t>(parsed);
+    return parsed;
 }
 
 }  // namespace
