@@ -33,6 +33,8 @@ The default run advances a 32 × 20 × 20 lattice for 100 time steps with a smal
 ./build/lbm_demo 48 24 24 250 result.vtk
 ```
 
+The numeric arguments (`nx`, `ny`, `nz`, and `steps`) must be positive base-10 integers without a sign or surrounding whitespace; zero and values that do not fit in `size_t` are rejected.
+
 The VTK file can be opened in ParaView or another reader supporting legacy VTK structured points. Density and velocity are point fields; solid cells are written with zero macroscopic values.
 
 ## Library sketch
